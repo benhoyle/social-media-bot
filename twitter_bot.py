@@ -26,8 +26,10 @@ query_term = parser.get('query_settings','query_term')
 tweets = twitter.search.tweets(q=query_term)['statuses']
 
 # Extract tweetID, username and text of tweets returned from search
-
 for tweet in tweets:
-	print tweet['id_str']
-	print tweet['user']['screen_name']
-	print tweet['text']
+	#Recommended to exclude RTs - boolean retweeted variable only indicates whether current account has retweeted - use whether tweet text contains RT
+	if 'RT @' not in tweet['text']:
+		print tweet['id_str']
+		print tweet['user']['screen_name']
+		print tweet['text']
+
