@@ -17,6 +17,17 @@ oauth = OAuth(settings_dict['access_token'], settings_dict['access_secret'], set
 
 # Initiate the connection to Twitter REST API
 twitter = Twitter(auth=oauth)
-            
+
+# Load query term from configuration file
+query_term = parser.get('query_settings','query_term')
+   
 # Search for latest tweets about query term
-print twitter.search.tweets(q='satan')
+# Tweets has components 'search_metadata' and 'statuses' - we want the latter
+tweets = twitter.search.tweets(q=query_term)['statuses']
+
+# Extract tweetID, username and text of tweets returned from search
+
+for tweet in tweets:
+	print tweet['id_str']
+	print tweet['user']['screen_name']
+	print tweet['text']
