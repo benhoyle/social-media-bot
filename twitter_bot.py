@@ -20,16 +20,28 @@ twitter = Twitter(auth=oauth)
 
 # Load query term from configuration file
 query_term = parser.get('query_settings','query_term')
+
+#Exclude RTs and replies in search query by adding " -RT -@"
+expanded_query_term = query_term + ' -RT -filter:replies'
    
 # Search for latest tweets about query term
+# Restrict to English language tweets and recent rather than popular
 # Tweets has components 'search_metadata' and 'statuses' - we want the latter
-tweets = twitter.search.tweets(q=query_term)['statuses']
+tweets = twitter.search.tweets(q=expanded_query_term, lang='en', result_type='recent', count='20')['statuses']
 
 # Extract tweetID, username and text of tweets returned from search
-for tweet in tweets:
-	#Recommended to exclude RTs - boolean retweeted variable only indicates whether current account has retweeted - use whether tweet text contains RT
-	if 'RT @' not in tweet['text']:
-		print tweet['id_str']
-		print tweet['user']['screen_name']
-		print tweet['text']
+tweets = [[tweet['id_str'],tweet['user']['screen_name'],tweet['text']] for tweet in tweets if query_term in tweet['text'].lower()]
 
+import pprint
+pprint.pprint(tweets)
+
+#Posting on twitter
+#twitter.statuses.update(status="Hello mortal realm")
+
+#Load response strings from settings.cfg file
+responses = parser.get('response_settings','responses')
+print responses
+
+#Build replies - add screen_name to start with '@'
+
+#Don't forget running list of IDs so you don't post twice - maybe use since_id to do this simply - record latest id return by search and start next search from this
