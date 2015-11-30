@@ -7,9 +7,9 @@ from twitter import Twitter, OAuth, TwitterHTTPError, TwitterStream
 # Import "ConfigParser" library to load settings ("configparser" in python 3)
 from ConfigParser import SafeConfigParser
 
-# Load API variables from settings.cfg file
+# Load API variables from settings.cfg file - needs full path for cron path
 parser = SafeConfigParser()
-parser.read('settings.cfg')
+parser.read('/home/pi/social-media-bot/settings.cfg')
 
 settings_dict = dict(parser.items('twitter_settings'))
 
@@ -30,7 +30,6 @@ responses = [r.strip().strip("'") for r in responses]
 
 # Load highest tweetID from last set of search results from settings.cfg
 last_tweet_id = parser.get('query_settings', 'last_tweet_id')
-print last_tweet_id
 
 # Search for latest tweets about query term
 # Restrict to English language tweets and recent rather than popular
